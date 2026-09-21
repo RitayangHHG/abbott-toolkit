@@ -252,47 +252,37 @@
   .card.muted .btn:hover{color:var(--text);}
 
   .card.card-wide{ grid-column: 1 / -1; }
-  .tree-wrap{ margin-top:6px; overflow-x:auto; }
-  .tree2-row{
-    display:flex;
-    flex-wrap:wrap;
-    align-items:flex-start;
-    gap:12px;
-  }
-  .tree2-col{
+  .tree-wrap{ margin-top:6px; }
+  .ttree{
     display:flex;
     flex-direction:column;
-    gap:8px;
+    gap:2px;
+    font-size:13.5px;
   }
-  .tree2-box{
+  .tfolder{
+    font-weight:600;
+    color:var(--text);
+    padding:7px 0;
+  }
+  .tleaf{
     display:block;
-    background:var(--panel-2);
-    border:1px solid var(--line);
-    border-radius:8px;
-    padding:10px 14px;
-    font-size:12.5px;
-    font-weight:500;
     color:var(--matcha);
     text-decoration:none;
-    white-space:nowrap;
-    text-align:center;
+    padding:7px 0;
+    width:fit-content;
   }
-  a.tree2-box:hover{ border-color:var(--matcha); }
-  .tree2-box.parent{
-    color:var(--text);
-    font-weight:600;
-    background:var(--panel);
-    cursor:default;
-  }
-  .tree2-children-row{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    padding:10px 0 0 14px;
-    border-left:2px solid var(--line);
+  .tleaf:hover{ text-decoration:underline; }
+  .tnode{ margin-bottom:2px; }
+  .tchildren{
+    padding-left:20px;
     margin-left:8px;
+    border-left:1px dashed var(--line);
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+    margin-top:2px;
+    margin-bottom:6px;
   }
-  .tree2-box.child{ font-size:11.5px; padding:7px 10px; }
 
   .tag{
     display:inline-block;
@@ -792,30 +782,8 @@ const DATA = [
   },
   {
     id:'teamdrive', label:'團隊資料夾', icon:'🗃️',
-    sub:'亞培組共用的雲端硬碟資料夾，公槽、企劃業務區、上架圖片都在這裡。',
-    items:[
-      {name:'亞培組公槽（共用雲端硬碟）', desc:'亞培組整個共用雲端硬碟的根目錄，各種資料夾都從這裡進去。',
-        tree:[
-          {label:'開啟公槽根目錄', url:'https://drive.google.com/drive/u/0/folders/0ANtzrI4ILHsnUk9PVA', root:true},
-          {label:'活動表', url:'https://drive.google.com/drive/folders/1BH7wdBASCqYld2JxedT4tJnvgpYnZRBv'},
-          {label:'週月報', url:'https://drive.google.com/drive/u/0/folders/1Z1hERpkh-M_zmb_FayXrLVLpUqye0aGs'},
-          {label:'毛利試算表', children:[
-            {label:'Momo', url:'https://drive.google.com/drive/u/0/folders/1zYqfinvkGcDWS1dUnrFNp6VbgJP3x-Cr'},
-            {label:'PChome', url:'https://drive.google.com/drive/u/0/folders/1HFpN2IUKjMryhe5a9Sr3NpgULJNa_F14'},
-            {label:'Abbottmall', url:'https://drive.google.com/drive/u/0/folders/1vin-T7Nm11-BC6frHzbe3bK8CpocmoFP'},
-            {label:'Shopee商城(含直營)', url:'https://drive.google.com/drive/u/0/folders/1LYaZPMbFZMgQJE1o1KWbePeDr_nzS7Qr'},
-            {label:'Shopee直營(算材積)', url:'https://drive.google.com/drive/u/0/folders/1xVga30LLV_U3OaMxvJqDrV0iCxltOWlk'},
-          ]},
-          {label:'各通路給採購活動表', children:[
-            {label:'Momo', url:'https://drive.google.com/drive/u/0/folders/1zcqn2vmPuWHWw_ajHtlQOzwfiimskndL'},
-            {label:'PChome', url:'https://drive.google.com/drive/u/0/folders/1MOvc4ijiyQaTyVGGb4Du_8qYoiGpUxte'},
-          ]},
-        ]},
-      {name:'H3.亞培（企劃業務區）', desc:'企劃業務新增區，看媒體素材、設計完稿用。',
-        links:[{label:'開啟資料夾', url:'https://drive.google.com/drive/u/0/folders/14C-mrmSXDFGJ1ZDJIJblu9Eq4KDzNqLt'}]},
-      {name:'H3.ABB亞培（上架圖片）', desc:'商品上架用圖片，正貨圖、贈品圖都在這裡。',
-        links:[{label:'開啟資料夾', url:'https://drive.google.com/drive/u/0/folders/15yi6D5NQ2LUee7NdFSJpFitmrjkZSXQP'}]},
-    ]
+    sub:'亞培組共用的雲端硬碟資料夾，用組織圖方式呈現層級。',
+    special:true
   },
   {
     id:'tasker', label:'指派工作器', icon:'🗓️',
@@ -853,30 +821,21 @@ function renderNav(){
   });
 }
 
-function renderTreeNodes(nodes){
-  const cols = nodes.map(n=>{
-    if(n.children){
-      const kids = n.children.map(c=>`<a class="tree2-box child" href="${c.url}" target="_blank" rel="noopener">${c.label} ↗</a>`).join('');
-      return `<div class="tree2-col">
-        <div class="tree2-box parent">📁 ${n.label}</div>
-        <div class="tree2-children-row">${kids}</div>
-      </div>`;
-    }
-    return `<div class="tree2-col">
-      <a class="tree2-box${n.root?' root':''}" href="${n.url}" target="_blank" rel="noopener">${n.root?'📁':'📄'} ${n.label} ↗</a>
+function renderTreeNode(n){
+  if(n.children){
+    const kids = n.children.map(renderTreeNode).join('');
+    return `<div class="tnode">
+      <div class="tfolder">📁 ${n.label}</div>
+      <div class="tchildren">${kids}</div>
     </div>`;
-  }).join('');
-  return `<div class="tree2-row">${cols}</div>`;
+  }
+  return `<a class="tleaf" href="${n.url}" target="_blank" rel="noopener">${n.icon||'📄'} ${n.label} ↗</a>`;
+}
+function renderTreeNodes(nodes){
+  return `<div class="ttree">${nodes.map(n=>renderTreeNode(n)).join('')}</div>`;
 }
 
 function cardHTML(item, mutedClass){
-  if(item.tree){
-    return `<div class="card ${mutedClass||''} card-wide">
-      <h3>${item.name}</h3>
-      <p>${item.desc}</p>
-      <div class="tree-wrap">${renderTreeNodes(item.tree)}</div>
-    </div>`;
-  }
   const links = item.links.map((l,i)=>{
     const cls = i===0 ? 'btn' : 'btn secondary';
     return `<a class="${cls}" href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`;
@@ -886,6 +845,31 @@ function cardHTML(item, mutedClass){
     <p>${item.desc}</p>
     <div class="links">${links}</div>
   </div>`;
+}
+
+/* ================= 團隊資料夾（組織圖） ================= */
+const TEAMDRIVE_TREE = [
+  {label:'亞培組公槽 (共用雲端硬碟)', icon:'📁', children:[
+    {label:'活動表', url:'https://drive.google.com/drive/folders/1BH7wdBASCqYld2JxedT4tJnvgpYnZRBv'},
+    {label:'週月報', url:'https://drive.google.com/drive/u/0/folders/1Z1hERpkh-M_zmb_FayXrLVLpUqye0aGs'},
+    {label:'毛利試算表', children:[
+      {label:'Momo', url:'https://drive.google.com/drive/u/0/folders/1zYqfinvkGcDWS1dUnrFNp6VbgJP3x-Cr'},
+      {label:'PChome', url:'https://drive.google.com/drive/u/0/folders/1HFpN2IUKjMryhe5a9Sr3NpgULJNa_F14'},
+      {label:'Abbottmall', url:'https://drive.google.com/drive/u/0/folders/1vin-T7Nm11-BC6frHzbe3bK8CpocmoFP'},
+      {label:'Shopee商城(含直營)', url:'https://drive.google.com/drive/u/0/folders/1LYaZPMbFZMgQJE1o1KWbePeDr_nzS7Qr'},
+      {label:'Shopee直營(算材積)', url:'https://drive.google.com/drive/u/0/folders/1xVga30LLV_U3OaMxvJqDrV0iCxltOWlk'},
+    ]},
+    {label:'各通路給採購活動表', children:[
+      {label:'Momo', url:'https://drive.google.com/drive/u/0/folders/1zcqn2vmPuWHWw_ajHtlQOzwfiimskndL'},
+      {label:'PChome', url:'https://drive.google.com/drive/u/0/folders/1MOvc4ijiyQaTyVGGb4Du_8qYoiGpUxte'},
+    ]},
+  ]},
+  {label:'H3.亞培 (企劃業務區)', url:'https://drive.google.com/drive/u/0/folders/14C-mrmSXDFGJ1ZDJIJblu9Eq4KDzNqLt'},
+  {label:'H3.ABB亞培 (上架圖片)', url:'https://drive.google.com/drive/u/0/folders/15yi6D5NQ2LUee7NdFSJpFitmrjkZSXQP'},
+];
+
+function renderTeamDriveInto(){
+  contentEl.innerHTML = `<div class="tree-wrap">${renderTreeNodes(TEAMDRIVE_TREE)}</div>`;
 }
 
 function renderTasker(){
@@ -1146,6 +1130,8 @@ function render(){
   if(cat.special){
     if(cat.id === 'announce'){
       renderAnnounceHub();
+    } else if(cat.id === 'teamdrive'){
+      renderTeamDriveInto();
     } else {
       contentEl.innerHTML = renderTasker();
     }
