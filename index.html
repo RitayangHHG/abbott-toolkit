@@ -429,6 +429,135 @@
     flex-wrap:wrap;
   }
 
+  /* ---- 公告欄 ---- */
+  .ann-composer{
+    margin-bottom:18px;
+  }
+  .ann-composer input,
+  .ann-composer textarea{
+    width:100%;
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    color:var(--text);
+    padding:9px 12px;
+    border-radius:8px;
+    font:inherit;
+    font-size:13.5px;
+    margin-bottom:8px;
+    resize:vertical;
+  }
+  .ann-composer input:focus,
+  .ann-composer textarea:focus{ outline:none; border-color:var(--matcha); }
+  .ann-list{ display:flex; flex-direction:column; gap:12px; }
+  .ann-item{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:14px 16px;
+  }
+  .ann-item-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:6px;
+    flex-wrap:wrap;
+  }
+  .ann-item-head strong{ font-size:14.5px; color:var(--text); }
+  .ann-meta{ font-size:11.5px; color:var(--muted); white-space:nowrap; }
+  .ann-body{
+    font-size:13px;
+    color:var(--text);
+    line-height:1.7;
+    white-space:pre-wrap;
+  }
+  .ann-del{ margin-top:10px; font-size:11.5px; padding:5px 10px; }
+  .ann-del-confirm{
+    margin-top:10px; font-size:11.5px; padding:5px 10px;
+    background:rgba(224,96,74,.18); color:#E0604A; border:1px solid rgba(224,96,74,.4);
+  }
+
+  /* ---- 公告欄／行事曆 子頁籤 ---- */
+  .subtabs{
+    display:flex;
+    gap:6px;
+    margin-bottom:20px;
+    border-bottom:1px solid var(--line);
+  }
+  .subtab-btn{
+    background:transparent;
+    border:none;
+    border-bottom:2px solid transparent;
+    color:var(--muted);
+    font:inherit;
+    font-size:13.5px;
+    font-weight:500;
+    padding:9px 4px;
+    margin-bottom:-1px;
+    cursor:pointer;
+  }
+  .subtab-btn:hover{ color:var(--text); }
+  .subtab-btn.active{ color:var(--matcha); border-bottom-color:var(--matcha); }
+
+  /* ---- 大事紀行事曆 ---- */
+  .cal-toolbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:14px;
+  }
+  .cal-title{ font-size:15px; font-weight:600; }
+  .cal-grid{
+    display:grid;
+    grid-template-columns:repeat(7, 1fr);
+    gap:5px;
+    margin-bottom:18px;
+  }
+  .cal-weekday{
+    text-align:center;
+    font-size:11px;
+    color:var(--muted);
+    padding-bottom:4px;
+  }
+  .cal-cell{
+    min-height:82px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:8px;
+    padding:5px 6px;
+    cursor:pointer;
+    display:flex;
+    flex-direction:column;
+    gap:3px;
+    overflow:hidden;
+  }
+  .cal-cell.empty{ background:transparent; border-color:transparent; cursor:default; }
+  .cal-cell:hover:not(.empty){ border-color:var(--muted); }
+  .cal-cell.today .cal-daynum{ color:var(--amber); font-weight:700; }
+  .cal-cell.selected{ border-color:var(--matcha); background:var(--matcha-dim); }
+  .cal-daynum{ font-size:12px; color:var(--text); flex:0 0 auto; }
+  .cal-events{ display:flex; flex-direction:column; gap:2px; min-width:0; }
+  .cal-ev-chip{
+    font-size:10.5px;
+    line-height:1.3;
+    color:var(--text);
+    background:rgba(157,189,138,.16);
+    border-left:2px solid var(--matcha);
+    border-radius:3px;
+    padding:1px 4px;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+  }
+  .cal-ev-more{ font-size:10px; color:var(--muted); padding-left:4px; }
+  .cal-selected-head{ font-size:13.5px; font-weight:600; margin-bottom:10px; }
+  @media (max-width: 860px){
+    .cal-cell{ min-height:64px; padding:4px; }
+    .cal-daynum{ font-size:11px; }
+    .cal-ev-chip{ font-size:9.5px; padding:1px 3px; }
+  }
+
   footer.note{
     margin-top:36px;
     font-size:11.5px;
@@ -506,6 +635,26 @@
 <script>
 const DATA = [
   {
+    id:'pm', label:'PM用', icon:'🧑‍💼',
+    sub:'PM 常用的日常小工具與計算邏輯。',
+    items:[
+      {name:'自動生成週報email／算2027年實銷用', desc:'過去對話：週報 email 自動產生、2027 年實銷試算的討論紀錄。',
+        links:[{label:'查看對話', url:'https://claude.ai/share/1dc7835c-5d5a-462e-8b34-60db7ed66db7'}]},
+      {name:'每月月中更新計算by sku', desc:'過去對話：月中 by SKU 更新計算邏輯的討論紀錄。',
+        links:[{label:'查看對話', url:'https://claude.ai/share/1f724cda-7ffc-4c24-9a71-7b3e808555ef'}]},
+      {name:'贈罐分配', desc:'過去對話：贈罐分配邏輯的討論紀錄。',
+        links:[{label:'查看對話', url:'https://claude.ai/share/bee423cb-36e3-4d23-9abc-a598981518dc'}]},
+      {name:'廠退', desc:'過去對話：廠退流程的討論紀錄。',
+        links:[{label:'查看對話', url:'https://claude.ai/share/7c0055a3-b379-4c15-a348-97d3e688d4e6'}]},
+      {name:'價差計算', desc:'過去對話：價差計算邏輯的討論紀錄。',
+        links:[{label:'查看對話', url:'https://claude.ai/share/570d21d1-bf22-4085-9c68-a9ce2dfaac28'}]},
+      {name:'一鍵回填每月stock和shipment數字', desc:'過去對話：一鍵回填 stock/shipment 數字工具的討論紀錄。',
+        links:[{label:'查看對話', url:'https://claude.ai/share/167a9e3e-5487-405c-8388-0ceea2223177'}]},
+      {name:'ADU和PED算價差', desc:'ADU / PED 價差計算表。',
+        links:[{label:'開啟表單', url:'https://docs.google.com/spreadsheets/d/1Vs6AesrPPqT2SOYL37OvrRG9XxohhAGXt_WkdRoANaA/edit?gid=1449041002'}]},
+    ]
+  },
+  {
     id:'performance', label:'業績分析', icon:'📊',
     sub:'各通路 GMV／訂單／客單價分析，以及 Looker Studio 業績 dashboard。',
     items:[
@@ -517,10 +666,10 @@ const DATA = [
         links:[{label:'開啟業績分析分頁', url:'https://docs.google.com/spreadsheets/d/1HRt19X0W7BfDdFFSXycdeW45MGPPbdnCGj-QMzJLTac/edit?gid=2121711299'}]},
       {name:'Shopee業績', desc:'Claude 產出的蝦皮 GMV／訂單／客單價分析，邏輯同 momo 版。',
         links:[{label:'開啟業績分析分頁', url:'https://docs.google.com/spreadsheets/d/17LbWvoVq67_YKjKGiWwWbzUmY0FXkHeWeyBXSara5nU/edit?gid=2121711299'}]},
-      {name:'今年和去年案型比較自動產出', desc:'寫週報時用來比對今年、去年同期活動案型的自動產出表。',
-        links:[{label:'開啟表單', url:'https://docs.google.com/spreadsheets/d/1w0uao3RG0Rj-ywxcRHOD1aWoU5XXUUYOKOScTZ8o_0c/edit?gid=559625634'}]},
       {name:'Abbott-平台流量報表', desc:'各平台流量原始資料彙整。',
         links:[{label:'開啟表單', url:'https://docs.google.com/spreadsheets/d/1NxvJsumABrw5sqOLn80a1cozn1_GIsXuc-oOb_RYggU/edit?gid=1067035998'}]},
+      {name:'PnL_ABB自動版', desc:'Y26 目標 4.2% 的 PNL 自動計算版本。',
+        links:[{label:'開啟表單', url:'https://docs.google.com/spreadsheets/d/1lyNeAQmDMIIW6iJjWOyK27ixQOgkyU8O7B7dkmvCyTQ/edit?gid=1319227562'}]},
       {name:'Dashboard｜原廠可看版', desc:'Looker Studio，原廠也有權限看的業績報表。',
         links:[{label:'開啟 Dashboard', url:'https://datastudio.google.com/u/0/reporting/2c193182-817e-41ba-a9b0-873e32751f7f/page/VgD'}]},
       {name:'Dashboard｜內部限定版', desc:'Looker Studio，內部限定，含客單價欄位。',
@@ -529,6 +678,18 @@ const DATA = [
         links:[{label:'開啟 Dashboard', url:'https://datastudio.google.com/u/0/reporting/f7d8bcff-1f96-45db-aa9e-93936162a99c/page/p_iyjlepc1td?s=nNylT1O17jU'}]},
       {name:'Dashboard｜PNL報表', desc:'Looker Studio，亞培組 PNL 報表。',
         links:[{label:'開啟 Dashboard', url:'https://datastudio.google.com/u/0/reporting/c3837d29-1d90-4b85-9133-fbfbeb9c59d9/page/p_th8176n56c'}]},
+    ]
+  },
+  {
+    id:'report', label:'做報告用', icon:'📝',
+    sub:'寫報告、週報洞察會用到的比較邏輯與 NotebookLM 筆記本。',
+    items:[
+      {name:'今年和去年案型比較器', desc:'過去對話：案型比較器邏輯的討論紀錄。',
+        links:[{label:'查看對話', url:'https://claude.ai/share/6a177358-1b17-4049-8fdf-7ad3e0ac1c1a'}]},
+      {name:'NotebookLM 筆記本 1', desc:'點擊開啟這份 NotebookLM 筆記本（名稱／用途待補充，跟 Claude 說一聲我可以補上說明）。',
+        links:[{label:'開啟 NotebookLM', url:'https://notebook.google.com/notebook/3e2520f7-32ee-4326-9b73-a84aa375a9cc'}]},
+      {name:'NotebookLM 筆記本 2', desc:'點擊開啟這份 NotebookLM 筆記本（名稱／用途待補充，跟 Claude 說一聲我可以補上說明）。',
+        links:[{label:'開啟 NotebookLM', url:'https://notebook.google.com/notebook/051b9a65-b24f-4d4b-8fae-2016abf1366a'}]},
     ]
   },
   {
@@ -562,6 +723,8 @@ const DATA = [
         links:[{label:'開啟表單', url:'https://docs.google.com/spreadsheets/d/1xxMsPKR83ybsPLxKyKDzo_RwdFu4WduqZaSjs0VovZw/edit?gid=292361460'}]},
       {name:'亞培短效新豐庫存for2C', desc:'Claude 產出的短效庫存自動更新＋寄信工具。',
         links:[{label:'開啟表單', url:'https://docs.google.com/spreadsheets/d/1ZPTOIXzPoFZvxN07xE-90Do-NTmmZhilaK3skM7tRNY/edit?gid=0'}]},
+      {name:'短效品處理', desc:'過去對話：短效品處理邏輯的討論紀錄。',
+        links:[{label:'查看對話', url:'https://claude.ai/share/6a177358-1b17-4049-8fdf-7ad3e0ac1c1a'}]},
     ]
   },
   {
@@ -574,14 +737,26 @@ const DATA = [
         links:[{label:'開啟表單', url:'https://docs.google.com/spreadsheets/d/1YvGSpYpzdnk-no3OJ8Dj17eTYBhlYtPDaXl2svYsJAE/edit?gid=1774588159'}]},
       {name:'亞培費用彙整', desc:'全通路費用彙整表。',
         links:[{label:'開啟表單', url:'https://docs.google.com/spreadsheets/d/1p1QTZOQ_dFJ24p5sgRhXd_mZyiRdxqt4pio2ASxBjDc/edit'}]},
-      {name:'PnL_ABB自動版', desc:'Y26 目標 4.2% 的 PNL 自動計算版本。',
-        links:[{label:'開啟表單', url:'https://docs.google.com/spreadsheets/d/1lyNeAQmDMIIW6iJjWOyK27ixQOgkyU8O7B7dkmvCyTQ/edit?gid=1319227562'}]},
-      {name:'ADU和PED算價差', desc:'ADU / PED 價差計算表。',
-        links:[{label:'開啟表單', url:'https://docs.google.com/spreadsheets/d/1Vs6AesrPPqT2SOYL37OvrRG9XxohhAGXt_WkdRoANaA/edit?gid=1449041002'}]},
       {name:'加工費和紙箱費(Sandy提供)', desc:'加工費與紙箱費用明細。',
         links:[{label:'開啟表單', url:'https://docs.google.com/spreadsheets/d/1753F5_04WIzdtlVu4_rEsAhySH-2aDuviK3ynzTxcsI/edit?gid=2079517149'}]},
       {name:'GTN&ANP明細自動回填信件', desc:'每月自動寄送 GTN & ANP 明細回填通知的 Apps Script 專案。',
         links:[{label:'開啟 Apps Script', url:'https://script.google.com/home/projects/1ZbrsANX-BtxKq26zGHFCkG9H1-4gqvd--ZHI9HjpTkQg_Owe4hN_DKxO/edit'}]},
+      {name:'全通路費用／內部填發票', desc:'過去對話：全通路費用彙整、內部發票填寫邏輯的討論紀錄。',
+        links:[{label:'查看對話', url:'https://claude.ai/share/5c347417-c0cb-400e-a409-9fbf1443656f'}]},
+      {name:'全通路發票整理', desc:'過去對話：全通路發票整理邏輯的討論紀錄。',
+        links:[{label:'查看對話', url:'https://claude.ai/share/79a9255d-c15a-4d10-aa82-254c2e6f3502'}]},
+    ]
+  },
+  {
+    id:'teamdrive', label:'團隊資料夾', icon:'🗃️',
+    sub:'亞培組共用的雲端硬碟資料夾，公槽、企劃業務區、上架圖片都在這裡。',
+    items:[
+      {name:'亞培組公槽（共用雲端硬碟）', desc:'亞培組整個共用雲端硬碟的根目錄，各種資料夾都從這裡進去。',
+        links:[{label:'開啟資料夾', url:'https://drive.google.com/drive/u/0/folders/0ANtzrI4ILHsnUk9PVA'}]},
+      {name:'H3.亞培（企劃業務區）', desc:'企劃業務新增區，看媒體素材、設計完稿用。',
+        links:[{label:'開啟資料夾', url:'https://drive.google.com/drive/u/0/folders/14C-mrmSXDFGJ1ZDJIJblu9Eq4KDzNqLt'}]},
+      {name:'H3.ABB亞培（上架圖片）', desc:'商品上架用圖片，正貨圖、贈品圖都在這裡。',
+        links:[{label:'開啟資料夾', url:'https://drive.google.com/drive/u/0/folders/15yi6D5NQ2LUee7NdFSJpFitmrjkZSXQP'}]},
     ]
   },
   {
@@ -590,29 +765,9 @@ const DATA = [
     special:true
   },
   {
-    id:'reference', label:'參考資料', icon:'🗂️',
-    sub:'過去對話紀錄，僅供回顧邏輯用，不是可操作的工具。',
-    muted:true,
-    items:[
-      {name:'自動生成週報email／算2027年實銷用', desc:'過去對話：週報 email 自動產生、2027 年實銷試算的討論紀錄。',
-        links:[{label:'查看對話', url:'https://claude.ai/share/1dc7835c-5d5a-462e-8b34-60db7ed66db7'}]},
-      {name:'每月月中更新計算by sku', desc:'過去對話：月中 by SKU 更新計算邏輯的討論紀錄。',
-        links:[{label:'查看對話', url:'https://claude.ai/share/1f724cda-7ffc-4c24-9a71-7b3e808555ef'}]},
-      {name:'贈罐分配', desc:'過去對話：贈罐分配邏輯的討論紀錄。',
-        links:[{label:'查看對話', url:'https://claude.ai/share/bee423cb-36e3-4d23-9abc-a598981518dc'}]},
-      {name:'廠退', desc:'過去對話：廠退流程的討論紀錄。',
-        links:[{label:'查看對話', url:'https://claude.ai/share/7c0055a3-b379-4c15-a348-97d3e688d4e6'}]},
-      {name:'全通路費用／內部填發票', desc:'過去對話：全通路費用彙整、內部發票填寫邏輯的討論紀錄。',
-        links:[{label:'查看對話', url:'https://claude.ai/share/5c347417-c0cb-400e-a409-9fbf1443656f'}]},
-      {name:'全通路發票整理', desc:'過去對話：全通路發票整理邏輯的討論紀錄。',
-        links:[{label:'查看對話', url:'https://claude.ai/share/79a9255d-c15a-4d10-aa82-254c2e6f3502'}]},
-      {name:'今年和去年案型比較器／短效品處理', desc:'過去對話：案型比較器與短效品處理邏輯的討論紀錄。',
-        links:[{label:'查看對話', url:'https://claude.ai/share/6a177358-1b17-4049-8fdf-7ad3e0ac1c1a'}]},
-      {name:'一鍵回填每月stock和shipment數字', desc:'過去對話：一鍵回填 stock/shipment 數字工具的討論紀錄。',
-        links:[{label:'查看對話', url:'https://claude.ai/share/167a9e3e-5487-405c-8388-0ceea2223177'}]},
-      {name:'價差計算', desc:'過去對話：價差計算邏輯的討論紀錄。',
-        links:[{label:'查看對話', url:'https://claude.ai/share/570d21d1-bf22-4085-9c68-a9ce2dfaac28'}]},
-    ]
+    id:'announce', label:'亞培組公告欄', icon:'📣',
+    sub:'公告事項與大事紀行事曆。',
+    special:true
   },
 ];
 
@@ -664,6 +819,241 @@ function renderTasker(){
   </div>`;
 }
 
+/* ================= 共用小工具 ================= */
+function escapeHtml(s){
+  return String(s==null?'':s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function pad2(n){ return n<10 ? '0'+n : ''+n; }
+function ymd(d){ return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate()); }
+
+/* ================= 亞培組公告欄 ================= */
+// This standalone file has no Claude runtime, so the board always
+// falls back to this browser's own localStorage (personal, not shared).
+const ANN_LOCAL_KEY = 'abbott_announcements_v1';
+let annState = null;
+let annComposerOpen = false;
+let annDeletePendingId = null;
+
+function loadLocalAnnouncements(){
+  try{ const raw = localStorage.getItem(ANN_LOCAL_KEY); return raw ? JSON.parse(raw) : []; }
+  catch(e){ return []; }
+}
+function saveLocalAnnouncements(list){
+  try{ localStorage.setItem(ANN_LOCAL_KEY, JSON.stringify(list)); }catch(e){}
+}
+function initAnnounce(){
+  const list = loadLocalAnnouncements().sort((a,b)=>b.createdAt-a.createdAt);
+  annState = {docs:list};
+  renderAnnounceInto();
+}
+function toggleAnnComposer(){ annComposerOpen = !annComposerOpen; renderAnnounceInto(); }
+function submitAnnouncement(){
+  const titleEl = document.getElementById('annTitle');
+  const bodyEl = document.getElementById('annBody');
+  const title = (titleEl.value||'').trim();
+  const content = (bodyEl.value||'').trim();
+  if(!content){ bodyEl.focus(); return; }
+  const list = loadLocalAnnouncements();
+  list.push({id:'a'+Date.now(), title: title||'(無標題)', content, createdAt: Date.now()});
+  saveLocalAnnouncements(list);
+  annState.docs = list.sort((a,b)=>b.createdAt-a.createdAt);
+  annComposerOpen = false;
+  renderAnnounceInto();
+}
+// No native confirm() — click once to arm, click the same button again to confirm.
+function requestDeleteAnnouncement(id){
+  if(annDeletePendingId === id){
+    annDeletePendingId = null;
+    const list = loadLocalAnnouncements().filter(a=>a.id!==id);
+    saveLocalAnnouncements(list);
+    annState.docs = list.sort((a,b)=>b.createdAt-a.createdAt);
+  } else {
+    annDeletePendingId = id;
+  }
+  renderAnnounceInto();
+}
+function renderAnnounceInto(){
+  if(activeCat !== 'announce' || announceSubTab !== 'board') return;
+  const body = document.getElementById('announceHubBody');
+  if(!body) return;
+  if(!annState){ body.innerHTML = `<div class="tl-state">正在讀取…</div>`; return; }
+  const noteHTML = `<div class="tag warn" style="margin-bottom:14px;">這份是獨立下載版，公告只存在您這台裝置的瀏覽器裡，不會同步給其他同事。要讓全組共用，請用 claude.ai 那個連結。</div>`;
+  const composerHTML = annComposerOpen ? `
+    <div class="ann-composer">
+      <input id="annTitle" type="text" placeholder="標題（選填）">
+      <textarea id="annBody" rows="3" placeholder="公告內容…"></textarea>
+      <div class="links">
+        <button class="btn" onclick="submitAnnouncement()">發布</button>
+        <button class="btn secondary" onclick="toggleAnnComposer()">取消</button>
+      </div>
+    </div>` : `
+    <div class="ann-composer">
+      <button class="btn" onclick="toggleAnnComposer()">＋ 發布公告</button>
+    </div>`;
+  const docs = annState.docs || [];
+  const listHTML = docs.length ? docs.map(d=>{
+    const date = new Date(d.createdAt).toLocaleString('zh-TW',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+    const pending = annDeletePendingId === d.id;
+    return `<div class="ann-item">
+      <div class="ann-item-head">
+        <strong>${escapeHtml(d.title||'(無標題)')}</strong>
+        <span class="ann-meta">${date}</span>
+      </div>
+      <div class="ann-body">${escapeHtml(d.content)}</div>
+      <button class="btn ${pending?'ann-del-confirm':'secondary ann-del'}" onclick="requestDeleteAnnouncement('${d.id}')">${pending?'再按一次確定刪除':'刪除'}</button>
+    </div>`;
+  }).join('') : `<div class="empty">目前還沒有公告。</div>`;
+  body.innerHTML = `${noteHTML}${composerHTML}<div class="ann-list">${listHTML}</div>`;
+}
+
+/* ================= 大事紀行事曆 ================= */
+const EV_LOCAL_KEY = 'abbott_events_v1';
+let evState = null;
+let evMonthOffset = 0;
+let evSelectedDate = null;
+let evComposerOpen = false;
+let evDeletePendingId = null;
+
+function loadLocalEvents(){
+  try{ const raw = localStorage.getItem(EV_LOCAL_KEY); return raw ? JSON.parse(raw) : []; }
+  catch(e){ return []; }
+}
+function saveLocalEvents(list){
+  try{ localStorage.setItem(EV_LOCAL_KEY, JSON.stringify(list)); }catch(e){}
+}
+function initEvents(){
+  evState = {docs: loadLocalEvents()};
+  renderEventsInto();
+}
+function eventsShiftMonth(delta){ evMonthOffset += delta; renderEventsInto(); }
+function eventsSelectDate(dateStr){ evSelectedDate = dateStr; evComposerOpen = false; renderEventsInto(); }
+function toggleEventComposer(){ evComposerOpen = !evComposerOpen; renderEventsInto(); }
+function submitEvent(){
+  const dateEl = document.getElementById('evDate');
+  const titleEl = document.getElementById('evTitle');
+  const noteEl = document.getElementById('evNote');
+  const date = dateEl.value;
+  const title = (titleEl.value||'').trim();
+  const note = (noteEl.value||'').trim();
+  if(!date || !title){ titleEl.focus(); return; }
+  const list = loadLocalEvents();
+  list.push({id:'e'+Date.now(), date, title, note, createdAt: Date.now()});
+  saveLocalEvents(list);
+  evState.docs = list;
+  evComposerOpen = false;
+  evSelectedDate = date;
+  renderEventsInto();
+}
+function requestDeleteEvent(id){
+  if(evDeletePendingId === id){
+    evDeletePendingId = null;
+    const list = loadLocalEvents().filter(e=>e.id!==id);
+    saveLocalEvents(list);
+    evState.docs = list;
+  } else {
+    evDeletePendingId = id;
+  }
+  renderEventsInto();
+}
+function renderEventsInto(){
+  if(activeCat !== 'announce' || announceSubTab !== 'calendar') return;
+  const body = document.getElementById('announceHubBody');
+  if(!body) return;
+  if(!evState){ body.innerHTML = `<div class="tl-state">正在讀取…</div>`; return; }
+
+  const today = new Date();
+  const base = new Date(today.getFullYear(), today.getMonth()+evMonthOffset, 1);
+  const year = base.getFullYear(), month = base.getMonth();
+  const firstWeekday = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month+1, 0).getDate();
+  const todayStr = ymd(today);
+  if(!evSelectedDate) evSelectedDate = todayStr;
+
+  const byDate = {};
+  (evState.docs||[]).forEach(d=>{ (byDate[d.date] = byDate[d.date]||[]).push(d); });
+
+  let cells = '';
+  for(let i=0;i<firstWeekday;i++) cells += `<div class="cal-cell empty"></div>`;
+  for(let day=1; day<=daysInMonth; day++){
+    const dateStr = `${year}-${pad2(month+1)}-${pad2(day)}`;
+    const dayEvents = byDate[dateStr] || [];
+    const isToday = dateStr===todayStr;
+    const isSel = dateStr===evSelectedDate;
+    const shown = dayEvents.slice(0,3).map(ev=>`<div class="cal-ev-chip" title="${escapeHtml(ev.title||'')}">${escapeHtml(ev.title||'(無標題)')}</div>`).join('');
+    const moreCount = dayEvents.length - 3;
+    cells += `<div class="cal-cell${isToday?' today':''}${isSel?' selected':''}" onclick="eventsSelectDate('${dateStr}')">
+      <span class="cal-daynum">${day}</span>
+      <div class="cal-events">
+        ${shown}
+        ${moreCount > 0 ? `<div class="cal-ev-more">+${moreCount} 筆</div>` : ''}
+      </div>
+    </div>`;
+  }
+  const weekLabels = ['日','一','二','三','四','五','六'].map(w=>`<div class="cal-weekday">${w}</div>`).join('');
+
+  const selEvents = byDate[evSelectedDate] || [];
+  const selList = selEvents.length ? selEvents.map(d=>{
+    const pending = evDeletePendingId === d.id;
+    return `<div class="ann-item">
+      <div class="ann-item-head"><strong>${escapeHtml(d.title||'(無標題)')}</strong></div>
+      ${d.note ? `<div class="ann-body">${escapeHtml(d.note)}</div>` : ''}
+      <button class="btn ${pending?'ann-del-confirm':'secondary ann-del'}" onclick="requestDeleteEvent('${d.id}')">${pending?'再按一次確定刪除':'刪除'}</button>
+    </div>`;
+  }).join('') : `<div class="empty">這天還沒有大事紀。</div>`;
+
+  const composerHTML = evComposerOpen ? `
+    <div class="ann-composer">
+      <input id="evDate" type="date" value="${evSelectedDate}">
+      <input id="evTitle" type="text" placeholder="事項標題">
+      <textarea id="evNote" rows="2" placeholder="備註（選填）"></textarea>
+      <div class="links">
+        <button class="btn" onclick="submitEvent()">新增</button>
+        <button class="btn secondary" onclick="toggleEventComposer()">取消</button>
+      </div>
+    </div>` : `
+    <div class="ann-composer">
+      <button class="btn" onclick="toggleEventComposer()">＋ 新增大事紀</button>
+    </div>`;
+
+  const noteHTML = `<div class="tag warn" style="margin-bottom:14px;">這份是獨立下載版，大事紀只存在您這台裝置的瀏覽器裡，不會同步給其他同事。要讓全組共用，請用 claude.ai 那個連結。</div>`;
+
+  body.innerHTML = `
+    ${noteHTML}
+    <div class="cal-toolbar">
+      <button class="btn secondary" onclick="eventsShiftMonth(-1)">‹ 上個月</button>
+      <div class="cal-title">${year}年${month+1}月</div>
+      <button class="btn secondary" onclick="eventsShiftMonth(1)">下個月 ›</button>
+    </div>
+    <div class="cal-grid">
+      ${weekLabels}
+      ${cells}
+    </div>
+    <div class="cal-selected-head">📌 ${evSelectedDate}</div>
+    <div class="ann-list">${selList}</div>
+    ${composerHTML}
+  `;
+}
+
+/* ================= 公告欄／行事曆 分頁切換 ================= */
+let announceSubTab = 'board'; // 'board' | 'calendar'
+
+function switchAnnounceSubTab(tab){
+  announceSubTab = tab;
+  renderAnnounceHub();
+}
+
+function renderAnnounceHub(){
+  contentEl.innerHTML = `
+    <div class="subtabs">
+      <button class="subtab-btn ${announceSubTab==='board'?'active':''}" onclick="switchAnnounceSubTab('board')">📣 公告</button>
+      <button class="subtab-btn ${announceSubTab==='calendar'?'active':''}" onclick="switchAnnounceSubTab('calendar')">📅 大事紀行事曆</button>
+    </div>
+    <div id="announceHubBody"></div>
+  `;
+  if(announceSubTab === 'calendar') initEvents(); else initAnnounce();
+}
+
 /* ================= render ================= */
 
 function render(){
@@ -673,7 +1063,11 @@ function render(){
   catSub.textContent = cat.sub;
 
   if(cat.special){
-    contentEl.innerHTML = renderTasker();
+    if(cat.id === 'announce'){
+      renderAnnounceHub();
+    } else {
+      contentEl.innerHTML = renderTasker();
+    }
     return;
   }
 
