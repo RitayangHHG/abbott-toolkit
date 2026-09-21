@@ -124,6 +124,32 @@
     color:var(--matcha);
   }
   .cat-btn.active .count{background:rgba(157,189,138,.22); color:var(--matcha);}
+  .cat-edit-btns{
+    display:flex;
+    gap:2px;
+    margin-left:6px;
+  }
+  .ebtn{
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    color:var(--muted);
+    font:inherit;
+    font-size:11px;
+    padding:4px 7px;
+    border-radius:6px;
+    cursor:pointer;
+  }
+  .ebtn:hover{ color:var(--text); border-color:var(--muted); }
+  .ebtn.mini{ padding:2px 6px; font-size:10.5px; }
+  .ebtn.danger{ color:var(--danger); }
+  .ebtn.danger:hover{ border-color:var(--danger); }
+  .card.editing{ border-color:var(--amber); }
+  .edit-bar{
+    display:flex;
+    gap:6px;
+    margin-bottom:8px;
+    flex-wrap:wrap;
+  }
 
   .rail-foot{
     margin-top:auto;
@@ -159,6 +185,17 @@
     font-size:13.5px;
     max-width:520px;
     line-height:1.55;
+  }
+  .topline-actions{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .edit-toggle-wrap{
+    display:flex;
+    align-items:center;
+    gap:8px;
   }
   .search{
     position:relative;
@@ -652,8 +689,11 @@
         <h2 id="catTitle" class="display"></h2>
         <div class="sub" id="catSub"></div>
       </div>
-      <div class="search">
-        <input id="searchInput" type="text" placeholder="搜尋工具名稱…">
+      <div class="topline-actions">
+        <div class="edit-toggle-wrap" id="editToggleWrap"></div>
+        <div class="search">
+          <input id="searchInput" type="text" placeholder="搜尋工具名稱…">
+        </div>
       </div>
     </div>
 
@@ -781,6 +821,22 @@ const DATA = [
     ]
   },
   {
+    id:'wiki', label:'亞培組wiki', icon:'📚',
+    sub:'交接文件、SOP、客服與換檔流程。',
+    items:[
+      {name:'交接', desc:'亞培組交接簡報。',
+        links:[{label:'開啟簡報', url:'https://docs.google.com/presentation/d/18XnAfvOl_20x6DFIjzUlmQWojp3H9QJ7PSRs7z6sjMg/edit#slide=id.g2e6833d6260_0_0'}]},
+      {name:'客服對應流程', desc:'客服問題對應SOP。',
+        links:[{label:'開啟表單', url:'https://docs.google.com/spreadsheets/d/1to7fHy6G3de9xon426oLPRcGivNae9Q6I9NwgAwrydE/edit?gid=927632129#gid=927632129'}]},
+      {name:'蝦皮換檔', desc:'蝦皮通路換檔流程。',
+        links:[{label:'開啟表單', url:'https://docs.google.com/spreadsheets/d/16-9tGE5wYTwDqvTkYEjRT69uEGJnyx6CTfBBupLRq1c/edit?gid=1579648755#gid=1579648755'}]},
+      {name:'PChome換檔', desc:'PChome通路換檔流程。',
+        links:[{label:'開啟表單', url:'https://docs.google.com/spreadsheets/d/1OrZWwUP3Vjxzj8LCt4gBJFAa6xFXa935mLGQb9aTXG8/edit?gid=612137778#gid=612137778'}]},
+      {name:'2026-2027漲價', desc:'2026-2027漲價相關資料夾。',
+        links:[{label:'開啟資料夾', url:'https://drive.google.com/drive/u/0/folders/1OA9Tvk_hN6teDcTROpVUhUlxh2XW2lHB'}]},
+    ]
+  },
+  {
     id:'teamdrive', label:'團隊資料夾', icon:'🗃️',
     sub:'亞培組共用的雲端硬碟資料夾，用組織圖方式呈現層級。',
     special:true
@@ -807,14 +863,132 @@ const searchInput = document.getElementById('searchInput');
 let activeCat = DATA[0].id;
 let query = '';
 
+/* ================= 版面自訂（編輯模式，僅存本機瀏覽器） ================= */
+const LAYOUT_LOCAL_KEY = 'abbott_layout_v1';
+let editMode = false;
+let layoutCustom = null;
+let editDeletePendingKey = null;
+
+function defaultLayoutCustom(){ return {categoryOrder:[], itemOrder:{}, deletedItems:{}}; }
+function escJs(s){ return String(s==null?'':s).replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+
+function getEffectiveCategories(){
+  const lc = layoutCustom || defaultLayoutCustom();
+  const order = lc.categoryOrder || [];
+  const byId = {}; DATA.forEach(c=>{ byId[c.id]=c; });
+  const ordered = order.map(id=>byId[id]).filter(Boolean);
+  const remaining = DATA.filter(c=>!order.includes(c.id));
+  return [...ordered, ...remaining];
+}
+function getEffectiveItems(cat){
+  if(!cat.items) return [];
+  const lc = layoutCustom || defaultLayoutCustom();
+  const delSet = new Set((lc.deletedItems && lc.deletedItems[cat.id]) || []);
+  const remaining = cat.items.filter(it=>!delSet.has(it.name));
+  const order = (lc.itemOrder && lc.itemOrder[cat.id]) || [];
+  const byName = {}; remaining.forEach(it=>{ byName[it.name]=it; });
+  const ordered = order.map(n=>byName[n]).filter(Boolean);
+  const rest = remaining.filter(it=>!order.includes(it.name));
+  return [...ordered, ...rest];
+}
+
+function loadLocalLayout(){
+  try{ const raw = localStorage.getItem(LAYOUT_LOCAL_KEY); return raw?JSON.parse(raw):null; }catch(e){ return null; }
+}
+function saveLocalLayout(){ try{ localStorage.setItem(LAYOUT_LOCAL_KEY, JSON.stringify(layoutCustom)); }catch(e){} }
+
+function initLayoutCustom(){
+  layoutCustom = loadLocalLayout() || defaultLayoutCustom();
+  renderNav();
+  render();
+}
+
+function toggleEditMode(){
+  editMode = !editMode;
+  editDeletePendingKey = null;
+  renderNav();
+  render();
+}
+
+function renderEditToggle(){
+  const wrap = document.getElementById('editToggleWrap');
+  if(!wrap) return;
+  if(editMode){
+    wrap.innerHTML = `
+      <button class="btn secondary" onclick="resetLayoutCustom()">↺ 恢復預設排序</button>
+      <button class="btn" onclick="toggleEditMode()">✅ 完成編輯</button>
+    `;
+  } else {
+    wrap.innerHTML = `<button class="btn secondary" onclick="toggleEditMode()">🔧 編輯版面</button>`;
+  }
+}
+
+function moveCategory(id, dir){
+  const cats = getEffectiveCategories();
+  const idx = cats.findIndex(c=>c.id===id);
+  const swapIdx = idx+dir;
+  if(idx<0 || swapIdx<0 || swapIdx>=cats.length) return;
+  const ids = cats.map(c=>c.id);
+  const tmp = ids[idx]; ids[idx]=ids[swapIdx]; ids[swapIdx]=tmp;
+  if(!layoutCustom) layoutCustom = defaultLayoutCustom();
+  layoutCustom.categoryOrder = ids;
+  saveLocalLayout();
+  renderNav();
+}
+
+function moveItem(catId, name, dir){
+  const cat = DATA.find(c=>c.id===catId);
+  if(!cat) return;
+  const items = getEffectiveItems(cat);
+  const idx = items.findIndex(it=>it.name===name);
+  const swapIdx = idx+dir;
+  if(idx<0 || swapIdx<0 || swapIdx>=items.length) return;
+  const names = items.map(it=>it.name);
+  const tmp = names[idx]; names[idx]=names[swapIdx]; names[swapIdx]=tmp;
+  if(!layoutCustom) layoutCustom = defaultLayoutCustom();
+  if(!layoutCustom.itemOrder) layoutCustom.itemOrder = {};
+  layoutCustom.itemOrder[catId] = names;
+  saveLocalLayout();
+  render();
+}
+
+function requestDeleteItem(catId, name){
+  const key = catId+'::'+name;
+  if(editDeletePendingKey === key){
+    editDeletePendingKey = null;
+    if(!layoutCustom) layoutCustom = defaultLayoutCustom();
+    if(!layoutCustom.deletedItems) layoutCustom.deletedItems = {};
+    if(!layoutCustom.deletedItems[catId]) layoutCustom.deletedItems[catId] = [];
+    layoutCustom.deletedItems[catId].push(name);
+    saveLocalLayout();
+    render();
+  } else {
+    editDeletePendingKey = key;
+    render();
+  }
+}
+
+function resetLayoutCustom(){
+  layoutCustom = defaultLayoutCustom();
+  saveLocalLayout();
+  renderNav();
+  render();
+}
+
 function renderNav(){
+  renderEditToggle();
+  const cats = getEffectiveCategories();
   [catsEl, tabbarEl].forEach(container=>{
     container.innerHTML = '';
-    DATA.forEach(cat=>{
+    cats.forEach(cat=>{
       const btn = document.createElement('button');
       btn.className = 'cat-btn' + (cat.id===activeCat ? ' active' : '');
-      const count = cat.special ? '' : `<span class="count">${cat.items.length}</span>`;
-      btn.innerHTML = `<span class="ico">${cat.icon}</span><span>${cat.label}</span>${count}`;
+      const count = cat.special ? '' : `<span class="count">${getEffectiveItems(cat).length}</span>`;
+      const editBtns = editMode ? `<span class="cat-edit-btns">
+          <button class="ebtn mini" onclick="event.stopPropagation();moveCategory('${escJs(cat.id)}',-1)" title="上移">↑</button>
+          <button class="ebtn mini" onclick="event.stopPropagation();moveCategory('${escJs(cat.id)}',1)" title="下移">↓</button>
+        </span>` : '';
+      btn.innerHTML = `<span class="ico">${cat.icon}</span><span>${cat.label}</span>${count}${editBtns}`;
       btn.addEventListener('click', ()=>{ activeCat = cat.id; query=''; searchInput.value=''; render(); });
       container.appendChild(btn);
     });
@@ -835,12 +1009,20 @@ function renderTreeNodes(nodes){
   return `<div class="ttree">${nodes.map(n=>renderTreeNode(n)).join('')}</div>`;
 }
 
-function cardHTML(item, mutedClass){
+function cardHTML(item, mutedClass, catId){
   const links = item.links.map((l,i)=>{
     const cls = i===0 ? 'btn' : 'btn secondary';
     return `<a class="${cls}" href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`;
   }).join('');
-  return `<div class="card ${mutedClass||''}">
+  const key = catId+'::'+item.name;
+  const pending = editDeletePendingKey === key;
+  const editBar = editMode ? `<div class="edit-bar">
+      <button class="ebtn" onclick="moveItem('${escJs(catId)}','${escJs(item.name)}',-1)" title="上移">↑ 上移</button>
+      <button class="ebtn" onclick="moveItem('${escJs(catId)}','${escJs(item.name)}',1)" title="下移">↓ 下移</button>
+      <button class="ebtn danger" onclick="requestDeleteItem('${escJs(catId)}','${escJs(item.name)}')">${pending?'再按一次確定刪除':'🗑 刪除'}</button>
+    </div>` : '';
+  return `<div class="card ${mutedClass||''}${editMode?' editing':''}">
+    ${editBar}
     <h3>${item.name}</h3>
     <p>${item.desc}</p>
     <div class="links">${links}</div>
@@ -850,6 +1032,7 @@ function cardHTML(item, mutedClass){
 /* ================= 團隊資料夾（組織圖） ================= */
 const TEAMDRIVE_TREE = [
   {label:'亞培組公槽 (共用雲端硬碟)', icon:'📁', children:[
+    {label:'亞培合約', url:'https://drive.google.com/drive/u/0/folders/1HiTC4MZz4e6AdEhMJ9EX649tpvJp0QGh'},
     {label:'活動表', url:'https://drive.google.com/drive/folders/1BH7wdBASCqYld2JxedT4tJnvgpYnZRBv'},
     {label:'週月報', url:'https://drive.google.com/drive/u/0/folders/1Z1hERpkh-M_zmb_FayXrLVLpUqye0aGs'},
     {label:'毛利試算表', children:[
@@ -1139,22 +1322,24 @@ function render(){
   }
 
   const q = query.trim().toLowerCase();
+  const allItems = getEffectiveItems(cat);
   const items = q
-    ? cat.items.filter(it => (it.name+it.desc).toLowerCase().includes(q))
-    : cat.items;
+    ? allItems.filter(it => (it.name+it.desc).toLowerCase().includes(q))
+    : allItems;
 
   if(items.length===0){
-    contentEl.innerHTML = `<div class="empty">找不到符合「${query}」的項目。</div>`;
+    contentEl.innerHTML = `<div class="empty">${q ? `找不到符合「${query}」的項目。` : '這個分類目前沒有項目了。'}</div>`;
     return;
   }
 
-  contentEl.innerHTML = `<div class="grid">${items.map(it=>cardHTML(it, cat.muted?'muted':'')).join('')}</div>`;
+  contentEl.innerHTML = `<div class="grid">${items.map(it=>cardHTML(it, cat.muted?'muted':'', cat.id)).join('')}</div>`;
 }
 
 
 searchInput.addEventListener('input', (e)=>{ query = e.target.value; render(); });
 
 render();
+initLayoutCustom();
 </script>
 </body>
 </html>
