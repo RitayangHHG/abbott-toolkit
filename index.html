@@ -10,27 +10,39 @@
 <style>
   :root{
     box-sizing: border-box;
-    --ink: #000000;
-    --panel: #000000;
-    --panel-2: #060606;
-    --line: #303030;
-    --text: #FFFFFF;
-    --muted: #B4B4B4;
-    --amber: #E7870B;
-    --amber-dim: #4A2B04;
-    --teal: #4FB8A0;
-    --danger: #D97757;
-    --matcha: #9DBD8A;
-    --matcha-dim: rgba(157,189,138,.16);
+    --ink: #FFFFFF;
+    --panel: #FFFFFF;
+    --panel-2: #F4F2EA;
+    --line: #E4E0D4;
+    --text: #17170F;
+    --muted: #6B6A5E;
+    --amber: #FF7A1A;
+    --amber-dim: #FFE4CC;
+    --teal: #2DA9E0;
+    --danger: #E0604A;
+    --matcha: #1F9D55;
+    --matcha-dim: rgba(31,157,85,.13);
+    --acc1: #2DA9E0;
+    --acc2: #E0457B;
+    --acc3: #FF7A1A;
+    --acc4: #1F9D55;
+    --acc5: #8B5CF6;
+    --acc6: #D6A400;
+    --acc1-dim: #DFF1FA;
+    --acc2-dim: #FBE2EA;
+    --acc3-dim: #FFE9D6;
+    --acc4-dim: #DEF3E6;
+    --acc5-dim: #EDE6FC;
+    --acc6-dim: #FAF0D2;
     padding-top: env(safe-area-inset-top, 0px);
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
   *{box-sizing:border-box;}
   html{scroll-padding-top: env(safe-area-inset-top, 0px);}
-  /* fixed dark/black theme regardless of system preference — explicit user choice */
-  @media (prefers-color-scheme: light){
+  /* fixed white/light theme regardless of system preference — explicit user choice */
+  @media (prefers-color-scheme: dark){
     :root:not([data-theme="dark"]){
-      --ink:#000000; --panel:#000000; --panel-2:#060606; --line:#303030; --text:#FFFFFF; --muted:#B4B4B4;
+      --ink:#FFFFFF; --panel:#FFFFFF; --panel-2:#F4F2EA; --line:#E4E0D4; --text:#17170F; --muted:#6B6A5E;
     }
   }
   html,body{height:100%;}
@@ -71,10 +83,16 @@
     padding:0 10px;
   }
   .brand .mark{
-    font-size:26px;
+    font-size:22px;
     line-height:1;
-    display:block;
-    margin-bottom:8px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:42px;
+    height:42px;
+    border-radius:13px;
+    background:linear-gradient(135deg, var(--acc1-dim), var(--acc3-dim));
+    margin-bottom:10px;
   }
   .brand h1{
     font-size:19px;
@@ -116,26 +134,49 @@
     cursor:pointer;
     transition:background .15s ease, color .15s ease;
   }
-  .cat-btn .ico{font-size:16px; width:20px; text-align:center;}
+  .cat-btn .ico{
+    font-size:14px;
+    width:26px;
+    height:26px;
+    flex:0 0 auto;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    border-radius:9px;
+    background:var(--ico-bg, var(--panel-2));
+  }
   .cat-btn .count{
     margin-left:auto;
     font-size:11.5px;
     color:var(--muted);
-    background:rgba(255,255,255,.05);
+    background:rgba(0,0,0,.045);
     padding:1px 7px;
     border-radius:20px;
   }
-  .cat-btn:hover{background:rgba(255,255,255,.06); color:var(--text);}
+  .cat-btn:hover{background:rgba(0,0,0,.05); color:var(--text);}
   .cat-btn.active{
     background:var(--matcha-dim);
     color:var(--matcha);
   }
-  .cat-btn.active .count{background:rgba(157,189,138,.22); color:var(--matcha);}
+  .cat-btn.active .count{background:rgba(31,157,85,.20); color:var(--matcha);}
   .cat-edit-btns{
     display:flex;
     gap:2px;
     margin-left:6px;
   }
+  .cat-label-input{
+    flex:1;
+    min-width:0;
+    font:inherit;
+    font-size:13.5px;
+    font-weight:500;
+    color:var(--text);
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:6px;
+    padding:3px 7px;
+  }
+  .cat-label-input:focus{ outline:none; border-color:var(--amber); }
   .ebtn{
     background:var(--panel-2);
     border:1px solid var(--line);
@@ -152,10 +193,16 @@
   .ebtn.danger:hover{ border-color:var(--danger); }
   .card.editing{ border-color:var(--amber); }
   .edit-bar{
+    position:absolute;
+    top:-10px;
+    right:14px;
     display:flex;
     gap:6px;
-    margin-bottom:8px;
     flex-wrap:wrap;
+    background:var(--panel);
+    padding:3px 6px;
+    border-radius:8px;
+    border:1px solid var(--line);
   }
 
   .rail-foot{
@@ -176,23 +223,60 @@
     padding:34px 40px 60px;
   }
   .topline{
+    position:relative;
+    overflow:hidden;
     display:flex;
     align-items:flex-start;
     justify-content:space-between;
     gap:24px;
     margin-bottom:26px;
     flex-wrap:wrap;
+    padding:24px 26px 22px;
+    border-radius:18px;
+    background:
+      radial-gradient(circle at 15% 15%, rgba(255,255,255,.09), transparent 42%),
+      radial-gradient(circle at 82% 75%, rgba(255,255,255,.07), transparent 45%),
+      linear-gradient(160deg, #0B2A1A 0%, #14472B 45%, #256B3F 75%, #4A9860 100%);
   }
+  .topline::before{
+    content:'';
+    position:absolute; inset:0;
+    background-image:
+      radial-gradient(1.6px 1.6px at 8% 25%, rgba(255,255,255,.55), transparent),
+      radial-gradient(1.6px 1.6px at 30% 65%, rgba(255,255,255,.4), transparent),
+      radial-gradient(1.2px 1.2px at 50% 20%, rgba(255,255,255,.35), transparent),
+      radial-gradient(1.6px 1.6px at 72% 58%, rgba(255,255,255,.45), transparent),
+      radial-gradient(1.2px 1.2px at 90% 30%, rgba(255,255,255,.3), transparent),
+      radial-gradient(1.2px 1.2px at 62% 82%, rgba(255,255,255,.3), transparent),
+      radial-gradient(1.2px 1.2px at 20% 85%, rgba(255,255,255,.28), transparent);
+    pointer-events:none;
+  }
+  .topline > *{ position:relative; }
   .topline h2{
-    font-size:26px;
+    font-size:24px;
     margin:0 0 6px;
+    color:#fff;
   }
   .topline .sub{
-    color:var(--muted);
+    color:rgba(245,240,255,.72);
     font-size:13.5px;
     max-width:520px;
     line-height:1.55;
   }
+  .topline .search input{
+    background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.28);
+    color:#fff;
+  }
+  .topline .search input::placeholder{ color:rgba(245,240,255,.55); }
+  .topline .search::before{ color:rgba(245,240,255,.6); }
+  .topline .btn.secondary{
+    background:rgba(255,255,255,.12);
+    border-color:rgba(255,255,255,.3);
+    color:#fff;
+  }
+  .topline .btn.secondary:hover{ background:rgba(255,255,255,.2); color:#fff; border-color:rgba(255,255,255,.45); }
+  .topline .btn{ background:rgba(255,255,255,.92); }
   .topline-actions{
     display:flex;
     align-items:center;
@@ -230,24 +314,40 @@
   }
 
   .grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
-    gap:14px;
-  }
-  .card{
-    background:var(--panel);
-    border:1px solid var(--line);
-    border-radius:10px;
-    padding:16px 16px 14px;
     display:flex;
     flex-direction:column;
     gap:10px;
-    min-height:126px;
+  }
+  .card{
+    background:var(--panel);
+    position:relative;
+    border:1px solid var(--line);
+    border-left:3px solid var(--card-accent, var(--line));
+    border-radius:12px;
+    padding:16px 20px;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    gap:22px;
+    min-height:unset;
+    box-shadow:0 1px 2px rgba(23,23,15,.04), 0 2px 8px rgba(23,23,15,.05);
+    transition:box-shadow .15s ease, transform .15s ease;
+  }
+  .card:hover{
+    box-shadow:0 2px 4px rgba(23,23,15,.06), 0 6px 16px rgba(23,23,15,.08);
+    transform:translateY(-1px);
+  }
+  .card-main{
+    flex:1;
+    min-width:0;
+    display:flex;
+    flex-direction:column;
+    gap:4px;
   }
   .card h3{
-    font-family:'Inter',sans-serif;
-    font-weight:600;
-    font-size:14.5px;
+    font-family:'Inter',"Noto Sans TC","PingFang TC",sans-serif;
+    font-weight:700;
+    font-size:15.5px;
     margin:0;
     line-height:1.4;
     color:var(--text);
@@ -256,15 +356,34 @@
     margin:0;
     font-size:12.5px;
     color:var(--muted);
-    line-height:1.55;
-    flex:1;
+    line-height:1.5;
+    flex:none;
   }
   .card .links{
     display:flex;
+    flex:0 0 auto;
     flex-wrap:wrap;
-    gap:8px;
-    margin-top:2px;
+    justify-content:flex-end;
+    gap:4px 16px;
+    margin-top:0;
+    max-width:220px;
   }
+  .card-link{
+    display:inline-flex;
+    align-items:center;
+    gap:3px;
+    font-size:12.5px;
+    font-weight:600;
+    text-decoration:none;
+    color:var(--muted);
+    padding:0;
+    background:none;
+    border:none;
+    border-bottom:1px solid transparent;
+    transition:color .15s ease, border-color .15s ease;
+  }
+  .card-link.primary{ color:var(--card-accent, var(--amber)); }
+  .card-link:hover{ border-bottom-color:currentColor; }
   .btn{
     display:inline-flex;
     align-items:center;
@@ -292,8 +411,8 @@
     border-style:dashed;
     opacity:.85;
   }
-  .card.muted .btn{background:transparent; border:1px solid var(--line); color:var(--muted);}
-  .card.muted .btn:hover{color:var(--text);}
+  .card.muted .card-link{ color:var(--muted); }
+  .card.muted .card-link:hover{ color:var(--text); }
 
   .card.card-wide{ grid-column: 1 / -1; }
   .tree-wrap{ margin-top:6px; }
@@ -334,11 +453,11 @@
     font-weight:600;
     padding:2px 8px;
     border-radius:20px;
-    background:rgba(79,184,160,.12);
+    background:rgba(45,169,224,.14);
     color:var(--teal);
     width:fit-content;
   }
-  .tag.warn{background:rgba(217,119,87,.14); color:var(--danger);}
+  .tag.warn{background:rgba(224,96,74,.14); color:var(--danger);}
 
   /* ---- hero panel for 指派工作器 ---- */
   .hero{
@@ -387,7 +506,7 @@
   .tl-legend span{display:inline-flex; align-items:center; gap:6px;}
   .dot{width:9px; height:9px; border-radius:50%; display:inline-block;}
   .dot.urgent{background:#E0604A;}
-  .dot.soon{background:#E8C13D;}
+  .dot.soon{background:#C9971F;}
   .dot.ok{background:#5FBF8F;}
   .dot.done{background:#5B6478;}
   .dot.unknown{background:#7A86A6;}
@@ -422,7 +541,7 @@
   .tl-ruler .tick{
     position:absolute;
     top:0; bottom:0;
-    border-left:1px dashed rgba(255,255,255,.08);
+    border-left:1px dashed rgba(0,0,0,.10);
     font-size:10.5px;
     color:var(--muted);
     padding-left:4px;
@@ -482,7 +601,7 @@
     cursor:default;
   }
   .tl-chip.urgent{border-left-color:#E0604A;}
-  .tl-chip.soon{border-left-color:#E8C13D;}
+  .tl-chip.soon{border-left-color:#C9971F;}
   .tl-chip.ok{border-left-color:#5FBF8F;}
   .tl-chip.done{border-left-color:#5B6478; color:var(--muted);}
   .tl-chip.unknown{border-left-color:#7A86A6;}
@@ -554,6 +673,148 @@
     background:rgba(224,96,74,.18); color:#E0604A; border:1px solid rgba(224,96,74,.4);
   }
 
+  /* ---- 計算小工具 ---- */
+  .calc-channel-tabs{
+    display:flex;
+    gap:6px;
+    flex-wrap:wrap;
+    margin-bottom:18px;
+  }
+  .calc-channel-btn{
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    color:var(--muted);
+    font:inherit;
+    font-size:12.5px;
+    padding:7px 14px;
+    border-radius:20px;
+    cursor:pointer;
+  }
+  .calc-channel-btn:hover{ color:var(--text); }
+  .calc-channel-btn.active{ background:var(--matcha-dim); color:var(--matcha); border-color:var(--matcha); }
+  .calc-table-wrap{
+    overflow-x:auto;
+    margin-bottom:16px;
+    border:1px solid var(--line);
+    border-radius:12px;
+  }
+  .calc-table{
+    border-collapse:collapse;
+    width:100%;
+    min-width:920px;
+    font-size:12.5px;
+  }
+  .calc-table th{
+    background:var(--panel-2);
+    color:var(--muted);
+    font-weight:600;
+    font-size:11.5px;
+    text-align:left;
+    padding:10px 8px;
+    white-space:nowrap;
+    border-bottom:1px solid var(--line);
+  }
+  .calc-table td{
+    padding:6px 8px;
+    border-bottom:1px solid var(--line);
+    background:var(--panel);
+  }
+  .calc-table tr:last-child td{ border-bottom:none; }
+  .calc-cell-text, .calc-cell-num{
+    width:100%;
+    min-width:70px;
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    color:var(--text);
+    padding:7px 8px;
+    border-radius:6px;
+    font:inherit;
+    font-size:12.5px;
+  }
+  .calc-cell-text{ min-width:90px; }
+  .calc-cell-text:focus, .calc-cell-num:focus{ outline:none; border-color:var(--matcha); }
+  .calc-cell-out{
+    color:var(--text);
+    white-space:nowrap;
+    font-weight:500;
+  }
+  .calc-cell-highlight{
+    color:var(--amber);
+    font-weight:700;
+    font-size:13.5px;
+  }
+  .calc-result{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:18px 20px;
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(180px, 1fr));
+    gap:14px;
+  }
+  .calc-result-item .calc-result-label{ font-size:12px; color:var(--muted); margin-bottom:4px; }
+  .calc-result-item .calc-result-value{ font-size:16px; font-weight:600; color:var(--text); }
+  .calc-result-item.main .calc-result-value{ color:var(--amber); font-size:22px; }
+  .calc-savenote{ font-size:11.5px; color:var(--muted); margin-top:12px; }
+
+  /* ---- PM用：全通路業績總覽（星空漸層卡） ---- */
+  .pm-hero{
+    position:relative;
+    overflow:hidden;
+    border-radius:18px;
+    padding:26px 26px 22px;
+    margin-bottom:22px;
+    background:
+      radial-gradient(circle at 15% 15%, rgba(255,255,255,.09), transparent 42%),
+      radial-gradient(circle at 82% 75%, rgba(255,255,255,.07), transparent 45%),
+      linear-gradient(160deg, #0B2A1A 0%, #14472B 45%, #256B3F 75%, #4A9860 100%);
+    color:#F5F0FF;
+  }
+  .pm-hero::before{
+    content:'';
+    position:absolute; inset:0;
+    background-image:
+      radial-gradient(1.6px 1.6px at 8% 22%, rgba(255,255,255,.55), transparent),
+      radial-gradient(1.6px 1.6px at 32% 62%, rgba(255,255,255,.4), transparent),
+      radial-gradient(1.2px 1.2px at 52% 18%, rgba(255,255,255,.35), transparent),
+      radial-gradient(1.6px 1.6px at 74% 55%, rgba(255,255,255,.45), transparent),
+      radial-gradient(1.2px 1.2px at 90% 28%, rgba(255,255,255,.3), transparent),
+      radial-gradient(1.2px 1.2px at 62% 80%, rgba(255,255,255,.3), transparent);
+    pointer-events:none;
+  }
+  .pm-hero-top{ position:relative; display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:14px; margin-bottom:18px; }
+  .pm-hero h2{ font-size:21px; margin:0 0 4px; color:#fff; font-weight:700; }
+  .pm-hero .pm-hero-sub{ font-size:12.5px; color:rgba(245,240,255,.68); max-width:520px; line-height:1.6; }
+  .pm-hero .pm-hero-sub a{ color:#fff; }
+  .pm-hero-dates{ position:relative; display:flex; gap:10px; }
+  .pm-hero-dates .calc-field label{ color:rgba(245,240,255,.65); }
+  .pm-hero-dates input{
+    background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.28);
+    color:#fff;
+    border-radius:8px;
+    padding:8px 10px;
+    font:inherit;
+    font-size:13px;
+  }
+  .pm-kpi-strip{
+    position:relative;
+    display:grid;
+    grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));
+    gap:16px 20px;
+  }
+  .pm-kpi-label{ font-size:11.5px; color:rgba(245,240,255,.6); margin-bottom:4px; }
+  .pm-kpi-value{ font-size:19px; font-weight:700; color:#fff; }
+  .pm-kpi-change{ font-size:11.5px; font-weight:600; margin-left:6px; }
+  .pm-kpi-change.up{ color:#D4F76A; }
+  .pm-kpi-change.down{ color:#FF9E8A; }
+  .pm-hero-divider{ position:relative; border-top:1px solid rgba(255,255,255,.15); margin:18px 0 16px; }
+  .pm-hero-footnote{ position:relative; font-size:11px; color:rgba(245,240,255,.55); margin-top:14px; }
+  .pm-hero-footnote button{
+    background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.28); color:#fff;
+    border-radius:20px; padding:3px 10px; font-size:11px; cursor:pointer; margin-left:6px;
+  }
+
   /* ---- 公告欄／行事曆 子頁籤 ---- */
   .subtabs{
     display:flex;
@@ -619,7 +880,7 @@
     font-size:10.5px;
     line-height:1.3;
     color:var(--text);
-    background:rgba(157,189,138,.16);
+    background:rgba(31,157,85,.14);
     border-left:2px solid var(--matcha);
     border-radius:3px;
     padding:1px 4px;
@@ -667,6 +928,8 @@
     main{padding:22px 18px 50px;}
     .topline{flex-direction:column;}
     .search{width:100%;}
+    .card{ flex-direction:column; align-items:stretch; }
+    .card .links{ justify-content:flex-start; max-width:none; }
   }
 </style>
 </head>
@@ -749,29 +1012,8 @@ const DATA = [
   },
   {
     id:'performance', label:'業績分析', icon:'📊',
-    sub:'各通路 GMV／訂單／客單價分析，以及 Looker Studio 業績 dashboard。',
-    items:[
-      {name:'亞培電商週報_By通路', desc:'六通路＋全通路加總週報，Apps Script 直連 BigQuery，含 WoW/YoY 文字洞察。',
-        links:[{label:'開啟週報', url:'https://docs.google.com/spreadsheets/d/1eDP_sDAwvq0MLB3F174TGwG41ZrepYVdXuXEGStnyIQ/edit'}]},
-      {name:'Momo業績分析', desc:'momo GMV／訂單數／客單價，依 Level2/3 拆解，含歷史三年比較。',
-        links:[{label:'開啟表單', url:'https://docs.google.com/spreadsheets/d/1GtuGxjlNXcQjdsgD93WIOmrzoVK8_coRdpBnuHb_PeM/edit'}]},
-      {name:'PChome業績', desc:'Claude 產出的 PChome GMV／訂單／客單價分析分頁；同一份檔案裡也有品牌 PM 做的實銷預估表。',
-        links:[{label:'開啟業績分析分頁', url:'https://docs.google.com/spreadsheets/d/1HRt19X0W7BfDdFFSXycdeW45MGPPbdnCGj-QMzJLTac/edit?gid=2121711299'}]},
-      {name:'Shopee業績', desc:'Claude 產出的蝦皮 GMV／訂單／客單價分析，邏輯同 momo 版。',
-        links:[{label:'開啟業績分析分頁', url:'https://docs.google.com/spreadsheets/d/17LbWvoVq67_YKjKGiWwWbzUmY0FXkHeWeyBXSara5nU/edit?gid=2121711299'}]},
-      {name:'Abbott-平台流量報表', desc:'各平台流量原始資料彙整。',
-        links:[{label:'開啟表單', url:'https://docs.google.com/spreadsheets/d/1NxvJsumABrw5sqOLn80a1cozn1_GIsXuc-oOb_RYggU/edit?gid=1067035998'}]},
-      {name:'PnL_ABB自動版', desc:'Y26 目標 4.2% 的 PNL 自動計算版本。',
-        links:[{label:'開啟表單', url:'https://docs.google.com/spreadsheets/d/1lyNeAQmDMIIW6iJjWOyK27ixQOgkyU8O7B7dkmvCyTQ/edit?gid=1319227562'}]},
-      {name:'Dashboard｜原廠可看版', desc:'Looker Studio，原廠也有權限看的業績報表。',
-        links:[{label:'開啟 Dashboard', url:'https://datastudio.google.com/u/0/reporting/2c193182-817e-41ba-a9b0-873e32751f7f/page/VgD'}]},
-      {name:'Dashboard｜內部限定版', desc:'Looker Studio，內部限定，含客單價欄位。',
-        links:[{label:'開啟 Dashboard', url:'https://datastudio.google.com/u/0/reporting/8216e876-b384-47d9-b537-e561fad78dac/page/VgD'}]},
-      {name:'Dashboard｜媒體成效', desc:'Looker Studio，看媒體投放表現用。',
-        links:[{label:'開啟 Dashboard', url:'https://datastudio.google.com/u/0/reporting/f7d8bcff-1f96-45db-aa9e-93936162a99c/page/p_iyjlepc1td?s=nNylT1O17jU'}]},
-      {name:'Dashboard｜PNL報表', desc:'Looker Studio，亞培組 PNL 報表。',
-        links:[{label:'開啟 Dashboard', url:'https://datastudio.google.com/u/0/reporting/c3837d29-1d90-4b85-9133-fbfbeb9c59d9/page/p_th8176n56c'}]},
-    ]
+    sub:'選通路看對應的分析工具；即時儀表板陸續補上。',
+    special:true
   },
   {
     id:'report', label:'做報告用', icon:'📝',
@@ -841,6 +1083,11 @@ const DATA = [
     ]
   },
   {
+    id:'calc', label:'計算小工具', icon:'🧮',
+    sub:'費用率計算器、媒體增額預算計算器。',
+    special:true
+  },
+  {
     id:'wiki', label:'亞培組wiki', icon:'📚',
     sub:'交接文件、SOP、客服與換檔流程。',
     items:[
@@ -889,16 +1136,37 @@ let editMode = false;
 let layoutCustom = null;
 let editDeletePendingKey = null;
 
-function defaultLayoutCustom(){ return {categoryOrder:[], itemOrder:{}, deletedItems:{}}; }
-function escJs(s){ return String(s==null?'':s).replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+function defaultLayoutCustom(){ return {categoryOrder:[], itemOrder:{}, deletedItems:{}, labels:{}}; }
+function escJs(s){
+  return String(s==null?'':s)
+    .replace(/\\/g,'\\\\')
+    .replace(/'/g,"\\'")
+    .replace(/"/g,'&quot;');
+}
 
 function getEffectiveCategories(){
   const lc = layoutCustom || defaultLayoutCustom();
   const order = lc.categoryOrder || [];
+  const labels = lc.labels || {};
+  const applyLabel = c => labels[c.id] ? {...c, label: labels[c.id]} : c;
   const byId = {}; DATA.forEach(c=>{ byId[c.id]=c; });
   const ordered = order.map(id=>byId[id]).filter(Boolean);
   const remaining = DATA.filter(c=>!order.includes(c.id));
-  return [...ordered, ...remaining];
+  return [...ordered, ...remaining].map(applyLabel);
+}
+
+function renameCategoryLabel(id, newLabel){
+  const lc = layoutCustom || (layoutCustom = defaultLayoutCustom());
+  if(!lc.labels) lc.labels = {};
+  const trimmed = (newLabel||'').trim();
+  const original = (DATA.find(c=>c.id===id)||{}).label || '';
+  if(!trimmed || trimmed === original){
+    delete lc.labels[id];
+  } else {
+    lc.labels[id] = trimmed;
+  }
+  saveLayoutCustom();
+  render();
 }
 function getEffectiveItems(cat){
   if(!cat.items) return [];
@@ -998,9 +1266,10 @@ function resetLayoutCustom(){
 function renderNav(){
   renderEditToggle();
   const cats = getEffectiveCategories();
+  const icoDims = ['var(--acc1-dim)','var(--acc2-dim)','var(--acc3-dim)','var(--acc4-dim)','var(--acc5-dim)','var(--acc6-dim)'];
   [catsEl, tabbarEl].forEach(container=>{
     container.innerHTML = '';
-    cats.forEach(cat=>{
+    cats.forEach((cat,i)=>{
       const btn = document.createElement('button');
       btn.className = 'cat-btn' + (cat.id===activeCat ? ' active' : '');
       const count = cat.special ? '' : `<span class="count">${getEffectiveItems(cat).length}</span>`;
@@ -1008,7 +1277,13 @@ function renderNav(){
           <button class="ebtn mini" onclick="event.stopPropagation();moveCategory('${escJs(cat.id)}',-1)" title="上移">↑</button>
           <button class="ebtn mini" onclick="event.stopPropagation();moveCategory('${escJs(cat.id)}',1)" title="下移">↓</button>
         </span>` : '';
-      btn.innerHTML = `<span class="ico">${cat.icon}</span><span>${cat.label}</span>${count}${editBtns}`;
+      const labelHTML = editMode
+        ? `<input type="text" class="cat-label-input" value="${escJs(cat.label)}"
+            onclick="event.stopPropagation()"
+            onchange="renameCategoryLabel('${escJs(cat.id)}', this.value)"
+            onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}">`
+        : `<span>${cat.label}</span>`;
+      btn.innerHTML = `<span class="ico" style="background:${icoDims[i % icoDims.length]}">${cat.icon}</span>${labelHTML}${count}${editBtns}`;
       btn.addEventListener('click', ()=>{ activeCat = cat.id; query=''; searchInput.value=''; render(); });
       container.appendChild(btn);
     });
@@ -1029,9 +1304,17 @@ function renderTreeNodes(nodes){
   return `<div class="ttree">${nodes.map(n=>renderTreeNode(n)).join('')}</div>`;
 }
 
+function categoryAccentColor(catId){
+  const cats = getEffectiveCategories();
+  const idx = cats.findIndex(c=>c.id===catId);
+  const accents = ['var(--acc1)','var(--acc2)','var(--acc3)','var(--acc4)','var(--acc5)','var(--acc6)'];
+  return accents[(idx<0?0:idx) % accents.length];
+}
+
 function cardHTML(item, mutedClass, catId){
+  const accent = categoryAccentColor(catId);
   const links = item.links.map((l,i)=>{
-    const cls = i===0 ? 'btn' : 'btn secondary';
+    const cls = i===0 ? 'card-link primary' : 'card-link';
     return `<a class="${cls}" href="${l.url}" target="_blank" rel="noopener">${l.label} ↗</a>`;
   }).join('');
   const key = catId+'::'+item.name;
@@ -1041,10 +1324,12 @@ function cardHTML(item, mutedClass, catId){
       <button class="ebtn" onclick="moveItem('${escJs(catId)}','${escJs(item.name)}',1)" title="下移">↓ 下移</button>
       <button class="ebtn danger" onclick="requestDeleteItem('${escJs(catId)}','${escJs(item.name)}')">${pending?'再按一次確定刪除':'🗑 刪除'}</button>
     </div>` : '';
-  return `<div class="card ${mutedClass||''}${editMode?' editing':''}">
+  return `<div class="card ${mutedClass||''}${editMode?' editing':''}" style="--card-accent:${accent}">
     ${editBar}
-    <h3>${item.name}</h3>
-    <p>${item.desc}</p>
+    <div class="card-main">
+      <h3>${item.name}</h3>
+      <p>${item.desc}</p>
+    </div>
     <div class="links">${links}</div>
   </div>`;
 }
@@ -1071,8 +1356,227 @@ const TEAMDRIVE_TREE = [
   {label:'H3.ABB亞培 (上架圖片)', url:'https://drive.google.com/drive/u/0/folders/15yi6D5NQ2LUee7NdFSJpFitmrjkZSXQP'},
 ];
 
+/* ================= 業績分析（通路下拉選單） ================= */
+const PERFORMANCE_CHANNELS = ['全通路','Momo','PChome','Yahoo','Shopee','Shopee直營','官網(Eshop=Abbottmall)'];
+const PERFORMANCE_ITEMS = {
+  '全通路': [
+    {name:'亞培電商週報_By通路', desc:'六通路＋全通路加總週報，Apps Script 直連 BigQuery，含 WoW/YoY 文字洞察。',
+      links:[{label:'開啟週報', url:'https://docs.google.com/spreadsheets/d/1eDP_sDAwvq0MLB3F174TGwG41ZrepYVdXuXEGStnyIQ/edit'}]},
+    {name:'Abbott-平台流量報表', desc:'各平台流量原始資料彙整。',
+      links:[{label:'開啟表單', url:'https://docs.google.com/spreadsheets/d/1NxvJsumABrw5sqOLn80a1cozn1_GIsXuc-oOb_RYggU/edit?gid=1067035998'}]},
+    {name:'PnL_ABB自動版', desc:'Y26 目標 4.2% 的 PNL 自動計算版本。',
+      links:[{label:'開啟表單', url:'https://docs.google.com/spreadsheets/d/1lyNeAQmDMIIW6iJjWOyK27ixQOgkyU8O7B7dkmvCyTQ/edit?gid=1319227562'}]},
+    {name:'Dashboard｜原廠可看版', desc:'Looker Studio，原廠也有權限看的業績報表。',
+      links:[{label:'開啟 Dashboard', url:'https://datastudio.google.com/u/0/reporting/2c193182-817e-41ba-a9b0-873e32751f7f/page/VgD'}]},
+    {name:'Dashboard｜內部限定版', desc:'Looker Studio，內部限定，含客單價欄位。',
+      links:[{label:'開啟 Dashboard', url:'https://datastudio.google.com/u/0/reporting/8216e876-b384-47d9-b537-e561fad78dac/page/VgD'}]},
+    {name:'Dashboard｜媒體成效', desc:'Looker Studio，看媒體投放表現用。',
+      links:[{label:'開啟 Dashboard', url:'https://datastudio.google.com/u/0/reporting/f7d8bcff-1f96-45db-aa9e-93936162a99c/page/p_iyjlepc1td?s=nNylT1O17jU'}]},
+    {name:'Dashboard｜PNL報表', desc:'Looker Studio，亞培組 PNL 報表。',
+      links:[{label:'開啟 Dashboard', url:'https://datastudio.google.com/u/0/reporting/c3837d29-1d90-4b85-9133-fbfbeb9c59d9/page/p_th8176n56c'}]},
+  ],
+  'Momo': [
+    {name:'Momo業績分析', desc:'momo GMV／訂單數／客單價，依 Level2/3 拆解，含歷史三年比較。',
+      links:[{label:'開啟表單', url:'https://docs.google.com/spreadsheets/d/1GtuGxjlNXcQjdsgD93WIOmrzoVK8_coRdpBnuHb_PeM/edit'}]},
+  ],
+  'PChome': [
+    {name:'PChome業績', desc:'Claude 產出的 PChome GMV／訂單／客單價分析分頁；同一份檔案裡也有品牌 PM 做的實銷預估表。',
+      links:[{label:'開啟業績分析分頁', url:'https://docs.google.com/spreadsheets/d/1HRt19X0W7BfDdFFSXycdeW45MGPPbdnCGj-QMzJLTac/edit?gid=2121711299'}]},
+  ],
+  'Yahoo': [],
+  'Shopee': [
+    {name:'Shopee業績', desc:'Claude 產出的蝦皮 GMV／訂單／客單價分析，邏輯同 momo 版。',
+      links:[{label:'開啟業績分析分頁', url:'https://docs.google.com/spreadsheets/d/17LbWvoVq67_YKjKGiWwWbzUmY0FXkHeWeyBXSara5nU/edit?gid=2121711299'}]},
+  ],
+  'Shopee直營': [],
+  '官網(Eshop=Abbottmall)': [],
+};
+let perfSelChannel = '全通路';
+
+function perfSelectChannel(v){ perfSelChannel = v; renderPerformanceInto(); }
+
+const PERF_LIVE_CHANNELS = {'Momo':1,'PChome':1,'Yahoo':1,'Shopee':1};
+const PERF_BQ_SHEET_URL = 'https://docs.google.com/spreadsheets/d/1NxvJsumABrw5sqOLn80a1cozn1_GIsXuc-oOb_RYggU/edit';
+
+function renderPerformanceInto(){
+  if(activeCat !== 'performance') return;
+  const items = PERFORMANCE_ITEMS[perfSelChannel] || [];
+  const q = query.trim().toLowerCase();
+  const filtered = q ? items.filter(it=>(it.name+it.desc).toLowerCase().includes(q)) : items;
+  const options = PERFORMANCE_CHANNELS.map(c=>`<option value="${c}" ${c===perfSelChannel?'selected':''}>${c}</option>`).join('');
+  const gridHTML = filtered.length
+    ? `<div class="grid">${filtered.map(it=>cardHTML(it,'','performance')).join('')}</div>`
+    : (q ? `<div class="empty">找不到符合「${query}」的項目。</div>` : `<div class="empty">這個通路目前還沒有工具，即時業績儀表板做好後會放進來。</div>`);
+  const dashHTML = PERF_LIVE_CHANNELS[perfSelChannel]
+    ? `<div class="pm-hero"><div class="pm-hero-top"><div><h2>${perfSelChannel}</h2><div class="pm-hero-sub">即時業績儀表板需要 claude.ai 才能即時讀取資料，獨立下載版無法使用。<br><a href="${PERF_BQ_SHEET_URL}" target="_blank" rel="noopener">開啟原始流量報表 ↗</a></div></div></div></div>`
+    : '';
+  contentEl.innerHTML = `
+    <div style="margin-bottom:18px;">
+      <select class="calc-cell-num" style="width:260px; font-size:14px; padding:10px 12px;" onchange="perfSelectChannel(this.value)">${options}</select>
+    </div>
+    ${dashHTML}
+    ${gridHTML}
+  `;
+}
+
 function renderTeamDriveInto(){
   contentEl.innerHTML = `<div class="tree-wrap">${renderTreeNodes(TEAMDRIVE_TREE)}</div>`;
+}
+
+/* ================= 計算小工具：費用率計算器（本機儲存版） ================= */
+const FEE_RATE_CHANNELS = ['Momo','PChome','Shopee','Eshop','Yahoo','Momo買版時費用率'];
+const FEE_RATE_LOCAL_KEY = 'abbott_feerate_v1';
+const FEE_RATE_ROW_COUNT = 4;
+let feeRateState = null;
+let feeRateActiveChannel = 'Momo';
+
+function emptyFeeRateRow(){ return {seriesName:'',boxCount:'',unitPrice:'',cansPerBox:'',giftCans:'',channelCoin:'',giftCost:''}; }
+function emptyFeeRateRows(){ return Array.from({length:FEE_RATE_ROW_COUNT}, emptyFeeRateRow); }
+
+function loadLocalFeeRate(){
+  try{ const raw = localStorage.getItem(FEE_RATE_LOCAL_KEY); return raw ? JSON.parse(raw) : {}; }
+  catch(e){ return {}; }
+}
+function saveLocalFeeRate(data){ try{ localStorage.setItem(FEE_RATE_LOCAL_KEY, JSON.stringify(data)); }catch(e){} }
+
+function initFeeRateCalc(){
+  feeRateState = {mode:'local', status:'ok', data: loadLocalFeeRate()};
+  renderCalcInto();
+}
+
+function saveFeeRateChannel(){
+  if(!feeRateState) return;
+  const get = id => document.getElementById(id);
+  const rows = [];
+  for(let i=0;i<FEE_RATE_ROW_COUNT;i++){
+    rows.push({
+      seriesName: (get(`fr_r${i}_seriesName`).value||'').trim(),
+      boxCount: parseFloat(get(`fr_r${i}_boxCount`).value) || 0,
+      unitPrice: parseFloat(get(`fr_r${i}_unitPrice`).value) || 0,
+      cansPerBox: parseFloat(get(`fr_r${i}_cansPerBox`).value) || 0,
+      giftCans: parseFloat(get(`fr_r${i}_giftCans`).value) || 0,
+      channelCoin: parseFloat(get(`fr_r${i}_channelCoin`).value) || 0,
+      giftCost: parseFloat(get(`fr_r${i}_giftCost`).value) || 0,
+    });
+  }
+  feeRateState.data[feeRateActiveChannel] = rows;
+  saveLocalFeeRate(feeRateState.data);
+  const noteEl = document.getElementById('fr_saveNote');
+  if(noteEl) noteEl.textContent = '已儲存（僅本機瀏覽器）';
+}
+
+function switchFeeRateChannel(channel){
+  feeRateActiveChannel = channel;
+  renderCalcInto();
+}
+
+function recalcFeeRateRow(i){
+  const get = id => parseFloat(document.getElementById(id).value) || 0;
+  const boxCount = get(`fr_r${i}_boxCount`);
+  const unitPrice = get(`fr_r${i}_unitPrice`);
+  const cansPerBox = get(`fr_r${i}_cansPerBox`);
+  const giftCans = get(`fr_r${i}_giftCans`);
+  const channelCoin = get(`fr_r${i}_channelCoin`);
+  const giftCost = get(`fr_r${i}_giftCost`);
+
+  const regularPrice = boxCount * unitPrice;
+  const perCanCost = cansPerBox > 0 ? (unitPrice / cansPerBox) : 0;
+  const totalGiftCost = giftCans * perCanCost;
+  const feeRate = regularPrice > 0 ? ((totalGiftCost + channelCoin + giftCost) / regularPrice) : 0;
+
+  const fmt = n => n.toLocaleString('zh-TW',{maximumFractionDigits:1});
+  document.getElementById(`fr_r${i}_out_regularPrice`).textContent = regularPrice ? fmt(regularPrice) : '-';
+  document.getElementById(`fr_r${i}_out_perCanCost`).textContent = perCanCost ? fmt(perCanCost) : '-';
+  document.getElementById(`fr_r${i}_out_totalGiftCost`).textContent = totalGiftCost ? fmt(totalGiftCost) : '-';
+  document.getElementById(`fr_r${i}_out_feeRate`).textContent = regularPrice ? (feeRate*100).toFixed(2)+'%' : '-';
+}
+
+function recalcFeeRate(){
+  for(let i=0;i<FEE_RATE_ROW_COUNT;i++) recalcFeeRateRow(i);
+}
+
+function feeRateRowHTML(row, i){
+  return `<tr>
+    <td><input class="calc-cell-text" type="text" id="fr_r${i}_seriesName" placeholder="系列別" value="${row.seriesName||''}" oninput="recalcFeeRateRow(${i})" onchange="saveFeeRateChannel()"></td>
+    <td><input class="calc-cell-num" type="number" id="fr_r${i}_boxCount" value="${row.boxCount||''}" oninput="recalcFeeRateRow(${i})" onchange="saveFeeRateChannel()"></td>
+    <td><input class="calc-cell-num" type="number" id="fr_r${i}_unitPrice" value="${row.unitPrice||''}" oninput="recalcFeeRateRow(${i})" onchange="saveFeeRateChannel()"></td>
+    <td><input class="calc-cell-num" type="number" id="fr_r${i}_cansPerBox" value="${row.cansPerBox||''}" oninput="recalcFeeRateRow(${i})" onchange="saveFeeRateChannel()"></td>
+    <td><input class="calc-cell-num" type="number" id="fr_r${i}_giftCans" value="${row.giftCans||''}" oninput="recalcFeeRateRow(${i})" onchange="saveFeeRateChannel()"></td>
+    <td><input class="calc-cell-num" type="number" id="fr_r${i}_channelCoin" value="${row.channelCoin||''}" oninput="recalcFeeRateRow(${i})" onchange="saveFeeRateChannel()"></td>
+    <td><input class="calc-cell-num" type="number" id="fr_r${i}_giftCost" value="${row.giftCost||''}" oninput="recalcFeeRateRow(${i})" onchange="saveFeeRateChannel()"></td>
+    <td class="calc-cell-out" id="fr_r${i}_out_regularPrice">-</td>
+    <td class="calc-cell-out" id="fr_r${i}_out_perCanCost">-</td>
+    <td class="calc-cell-out" id="fr_r${i}_out_totalGiftCost">-</td>
+    <td class="calc-cell-out calc-cell-highlight" id="fr_r${i}_out_feeRate">-</td>
+  </tr>`;
+}
+
+function renderCalcInto(){
+  if(activeCat !== 'calc' || calcActiveTool !== 'feerate') return;
+  const target = document.getElementById('calcBody');
+  if(!target) return;
+  if(!feeRateState){ target.innerHTML = `<div class="tl-state">正在讀取…</div>`; return; }
+
+  const rows = feeRateState.data[feeRateActiveChannel] || emptyFeeRateRows();
+  const noteHTML = `<div class="tag warn" style="margin-bottom:14px;">這份是獨立下載版，填的資料只存在您這台裝置的瀏覽器裡，不會同步給其他同事。要讓全組共用，請用 claude.ai 那個連結。</div>`;
+
+  const channelTabsHTML = FEE_RATE_CHANNELS.map(ch=>
+    `<button class="calc-channel-btn ${ch===feeRateActiveChannel?'active':''}" onclick="switchFeeRateChannel('${ch}')">${ch}</button>`
+  ).join('');
+
+  const rowsHTML = rows.map((row,i)=>feeRateRowHTML(row,i)).join('');
+
+  target.innerHTML = `
+    ${noteHTML}
+    <p style="color:var(--muted); font-size:13px; margin:0 0 16px;">公式：費用率 = (贈罐總成本 + 通路幣 + 贈品成本) ÷ 正貨價格。「系列別」是空白欄位自己填（不寫死安素/葡勝納），大家填完資料如果沒刪掉就會保留，不會自動清空。</p>
+    <div class="calc-channel-tabs">${channelTabsHTML}</div>
+    <div class="calc-table-wrap">
+      <table class="calc-table">
+        <thead>
+          <tr>
+            <th>系列別</th><th>箱數</th><th>單箱正貨價格</th><th>每箱罐數</th><th>本月贈罐數</th><th>通路幣</th><th>贈品成本</th>
+            <th>正貨價格</th><th>贈罐單罐成本</th><th>贈罐總成本</th><th>費用率</th>
+          </tr>
+        </thead>
+        <tbody>${rowsHTML}</tbody>
+      </table>
+    </div>
+    <div class="calc-savenote" id="fr_saveNote"></div>
+  `;
+  recalcFeeRate();
+}
+
+/* ================= 計算小工具：媒體增額預算計算器（獨立版：不可用） ================= */
+const MEDIA_BQ_SHEET_URL = 'https://docs.google.com/spreadsheets/d/12bo3CAWsDDmEK-lA17zkmpRepYkOFUNm6JJ-EgMYJ5s/edit';
+
+function initMediaBudget(){
+  renderMediaBudgetInto();
+}
+function renderMediaBudgetInto(){
+  if(activeCat !== 'calc' || calcActiveTool !== 'mediabudget') return;
+  const target = document.getElementById('calcBody');
+  if(!target) return;
+  target.innerHTML = `<div class="tl-state">這個功能需要 claude.ai 即時讀取試算表資料，獨立下載版無法使用。<br>
+    <a class="btn secondary" href="${MEDIA_BQ_SHEET_URL}" target="_blank" rel="noopener">開啟原始樞紐分析表 ↗</a></div>`;
+}
+
+/* ================= 計算小工具：頁籤切換 ================= */
+let calcActiveTool = 'feerate';
+
+function switchCalcTool(tool){
+  calcActiveTool = tool;
+  renderCalcHub();
+}
+
+function renderCalcHub(){
+  contentEl.innerHTML = `
+    <div class="subtabs">
+      <button class="subtab-btn ${calcActiveTool==='feerate'?'active':''}" onclick="switchCalcTool('feerate')">💰 費用率計算器</button>
+      <button class="subtab-btn ${calcActiveTool==='mediabudget'?'active':''}" onclick="switchCalcTool('mediabudget')">📈 媒體增額預算計算器</button>
+    </div>
+    <div id="calcBody"></div>
+  `;
+  if(calcActiveTool==='mediabudget') initMediaBudget(); else initFeeRateCalc();
 }
 
 function renderTasker(){
@@ -1326,7 +1830,7 @@ function renderAnnounceHub(){
 
 function render(){
   renderNav();
-  const cat = DATA.find(c=>c.id===activeCat);
+  const cat = getEffectiveCategories().find(c=>c.id===activeCat);
   catTitle.textContent = `${cat.icon} ${cat.label}`;
   catSub.textContent = cat.sub;
 
@@ -1335,6 +1839,10 @@ function render(){
       renderAnnounceHub();
     } else if(cat.id === 'teamdrive'){
       renderTeamDriveInto();
+    } else if(cat.id === 'calc'){
+      renderCalcHub();
+    } else if(cat.id === 'performance'){
+      renderPerformanceInto();
     } else {
       contentEl.innerHTML = renderTasker();
     }
